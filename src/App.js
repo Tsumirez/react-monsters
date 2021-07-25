@@ -8,20 +8,28 @@ class App extends Component {
 
     this.state = {
       monsters: [],
+      searchField: '',
+      filteredMonsters: []
     };
+  }
+
+  searchMonsters (e) {
+    let searchText = e.target.value;
+    this.setState({filteredMonsters: this.state.monsters.filter(monster=> !!(monster.name.indexOf(searchText)+1))});
   }
 
   componentDidMount() {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((response) => response.json())
-      .then((users) => this.setState({ monsters: users }))
+      .then((users) => this.setState({ monsters: users, filteredMonsters:users }))
       .catch((err) => console.log(err));
   }
 
   render() {
     return (
       <div className="App">
-        <CardList monsters={this.state.monsters}>
+        <input type="text" placeholder='search monsters' onChange={this.searchMonsters.bind(this)}/>
+        <CardList monsters={this.state.filteredMonsters}>
 
         </CardList>
       </div>
